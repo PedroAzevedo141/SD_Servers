@@ -1,5 +1,16 @@
 # SD_Servers
 
+## Primeira execução
+
+    Server:
+        - cd server
+        - python3 server.py (linux)
+        - py server.py (Windows)
+
+    Client:
+        - cd client
+        - python3 client.py (linux)
+        - py client.py (Windows)
 ## Realizado
 
     - Server que recebe informações dos clientes
