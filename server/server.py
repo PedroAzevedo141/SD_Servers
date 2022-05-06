@@ -4,10 +4,11 @@ import numpy as np
 
 clients = []
 
-def matrix(dictMatrix):
-    orderedNames = list(dictMatrix.keys())
-    dataMatrix = np.array([dictMatrix[i] for i in orderedNames])
-    print(dataMatrix)
+def matrix(listMatrix):
+    for dictMatrix in listMatrix:
+        orderedNames = list(dictMatrix.keys())
+        dataMatrix = np.array([dictMatrix[i] for i in orderedNames])
+        print(dataMatrix)
 
 def main():
     localIP = "127.0.0.1"
@@ -38,10 +39,15 @@ def main():
         print(clientMsg)
         print(clientIP)
         
-        dictConfig_matrix = dict()
-        dictConfig_matrix.update(yaml.safe_load(message.decode()))
+        message = ((message.decode()).split(" || "))[:-1]
+    
+        list_aux = list()
+        for x in message:        
+            dictConfig_matrix = dict()
+            dictConfig_matrix.update(yaml.safe_load(x))
+            list_aux.append(dictConfig_matrix)
         
-        matrix(dictConfig_matrix)
+        matrix(list_aux)
         
         msgFromServer = "Hello UDP Client"
         bytesToSend = str.encode(msgFromServer)

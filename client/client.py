@@ -18,16 +18,21 @@ def main(msg):
     
 if __name__ == "__main__":
     
-    width_matrix = int(input("\n Enter the width: "))
-    height_matrix = int(input("\n Enter the height: "))
+    num_matrix = int(input("\n Enter the number of arrays: "))
+    size_matrix = int(input("\n Enter the size of your square matrix: "))
 
-    dictConfig_matrix = dict()
-    for x in range(height_matrix):
-        listaux = list()
-        for y in range(width_matrix):
-            listaux.append(int(input("\n Insert a number: ")))
-    
-        dictConfig_matrix.update({str(x+1): listaux})
-        print(dictConfig_matrix)
+    string_aux = ""
+    for z in range(num_matrix):
+        dictConfig_matrix = dict()
+        print(f"\nCreating the {z + 1} matrix!")
+        for x in range(size_matrix):
+            listaux = list()
+            for y in range(size_matrix):
+                listaux.append(int(input("\n Insert a number: ")))
         
-    main(str(dictConfig_matrix))
+            dictConfig_matrix.update({str(x+1): listaux})
+            print(dictConfig_matrix)
+        print(f"\nFinishing the {z + 1} matrix!")
+        string_aux += str(dictConfig_matrix) + " || "
+        
+    main(string_aux)
