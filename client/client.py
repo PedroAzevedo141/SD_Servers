@@ -12,9 +12,9 @@ def main(msg):
     UDPClientSocket.sendto(bytesToSend, serverAddressPort)
     
     msgFromServer = UDPClientSocket.recvfrom(bufferSize)
-    msg = "Message from Server {}".format(msgFromServer[0])
-
-    print(msg)
+    
+    print("\nResult: ")
+    print(msgFromServer[0].decode())
     
 if __name__ == "__main__":
     

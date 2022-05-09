@@ -4,11 +4,27 @@ import numpy as np
 
 clients = []
 
-def matrix(listMatrix):
+def multMatrix_client(listMatrix):
+
+    """
+    listMatrix -> Lista de dicionarios, que contem as informacoes das matrizes enviadas pelo cliente.
+    dataMatrix -> Lista com todas as matrizes enviadas pelo cliente, matrizes numpy.
+    """
+    
+    dataMatrix = list()
     for dictMatrix in listMatrix:
-        orderedNames = list(dictMatrix.keys())
-        dataMatrix = np.array([dictMatrix[i] for i in orderedNames])
-        print(dataMatrix)
+        dataMatrix.append(np.array([dictMatrix[i] for i in list(dictMatrix.keys())]))
+    
+
+    result_mult = np.matmul(dataMatrix[0], dataMatrix[1])
+    if len(dataMatrix) > 2:
+        dataMatrix.pop(0)
+        dataMatrix.pop(0)
+        for oneMatrix in dataMatrix:
+            result_mult = np.matmul(result_mult, oneMatrix)
+            
+    return np.array2string(result_mult)
+
 
 def main():
     localIP = "127.0.0.1"
@@ -47,9 +63,7 @@ def main():
             dictConfig_matrix.update(yaml.safe_load(x))
             list_aux.append(dictConfig_matrix)
         
-        matrix(list_aux)
-        
-        msgFromServer = "Hello UDP Client"
+        msgFromServer = multMatrix_client(list_aux)
         bytesToSend = str.encode(msgFromServer)
         
         server.sendto(bytesToSend, address)

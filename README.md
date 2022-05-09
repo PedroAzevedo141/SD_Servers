@@ -18,11 +18,14 @@
     - Server se comunicando via UDP com os clientes.
     - O cliente esta enviando quando matriz quadradas forem solicitadas pelo usuario
     - O server esta lendo todas as matrizes enviadas pelo user.
-
-## Não Realizado
-
     - Desenvolver a multiplicação das matrizes nos servidores
         - Possivel fazer com o NUMPY
     - Enviar as respostas para o client.
+    
+
+## Não Realizado
+
     - Desenvolver uma comunicação do server UDP com outros servers TCP.
+    - Criar threads para a comunicacao dos clients com o server UDP
+    - Criar subprocess para a comunicacao do server UDP com o server TCP
     - Entre outros objetivos ...
