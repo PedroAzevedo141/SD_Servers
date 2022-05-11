@@ -3,6 +3,7 @@ import sys
 import yaml
 import socket
 import numpy as np
+import threading
 
 clients = []
 
@@ -45,6 +46,26 @@ def multMatrix_client(listMatrix):
             
     return np.array2string(result_mult)
 
+def messagesTreatment(message, address, server):
+    clientMsg = "Message from Client:{}".format(message)
+    clientIP = "Client IP Address:{}".format(address)
+
+    print(clientMsg)
+    print(clientIP)
+    
+    message = ((message.decode()).split(" || "))[:-1]
+
+    list_aux = list()
+    for x in message:        
+        dictConfig_matrix = dict()
+        dictConfig_matrix.update(yaml.safe_load(x))
+        list_aux.append(dictConfig_matrix)
+    
+    msgFromServer = multMatrix_client(list_aux)
+    bytesToSend = str.encode(msgFromServer)
+    
+    server.sendto(bytesToSend, address)
+
 
 def main():
     
@@ -73,25 +94,9 @@ def main():
         bytesAddressPair = server.recvfrom(bufferSize)
         message = bytesAddressPair[0]
         address = bytesAddressPair[1]
-
-        clientMsg = "Message from Client:{}".format(message)
-        clientIP = "Client IP Address:{}".format(address)
-
-        print(clientMsg)
-        print(clientIP)
         
-        message = ((message.decode()).split(" || "))[:-1]
-    
-        list_aux = list()
-        for x in message:        
-            dictConfig_matrix = dict()
-            dictConfig_matrix.update(yaml.safe_load(x))
-            list_aux.append(dictConfig_matrix)
-        
-        msgFromServer = multMatrix_client(list_aux)
-        bytesToSend = str.encode(msgFromServer)
-        
-        server.sendto(bytesToSend, address)
+        thread = threading.Thread(target=messagesTreatment, args=[message, address, server])
+        thread.start()
 
 if __name__ == "__main__":
     main()

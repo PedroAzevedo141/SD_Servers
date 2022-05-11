@@ -17,6 +17,21 @@ def define_and_get_arguments(args=sys.argv[1:]):
 
     return args
 
+def get_int():
+    userdata = input("\n Enter the number of arrays, or 'q' to quit:")
+    if userdata == 'q':
+        return None
+    try:
+        user_num = int(userdata)
+        if user_num > 1:
+            return user_num
+        else:
+            print("I need a number greater than 1 to continue.")
+            return(get_int())
+    except ValueError:
+        print("I need an integer to continue.")
+        return(get_int())
+
 def main(msg):
     bytesToSend = str.encode(msg)
     serverAddressPort = ("127.0.0.1", 20001)
@@ -35,21 +50,23 @@ def main(msg):
     
 if __name__ == "__main__":
     
-    num_matrix = int(input("\n Enter the number of arrays: "))
-    size_matrix = int(input("\n Enter the size of your square matrix: "))
+    num_matrix = get_int()
+    
+    if num_matrix != None:
+        size_matrix = int(input("\n Enter the size of your square matrix: "))
 
-    string_aux = ""
-    for z in range(num_matrix):
-        dictConfig_matrix = dict()
-        print(f"\nCreating the {z + 1} matrix!")
-        for x in range(size_matrix):
-            listaux = list()
-            for y in range(size_matrix):
-                listaux.append(int(input("\n Insert a number: ")))
-        
-            dictConfig_matrix.update({str(x+1): listaux})
-            print(dictConfig_matrix)
-        print(f"\nFinishing the {z + 1} matrix!")
-        string_aux += str(dictConfig_matrix) + " || "
-        
-    main(string_aux)
+        string_aux = ""
+        for z in range(num_matrix):
+            dictConfig_matrix = dict()
+            print(f"\nCreating the {z + 1} matrix!")
+            for x in range(size_matrix):
+                listaux = list()
+                for y in range(size_matrix):
+                    listaux.append(int(input("\n Insert a number: ")))
+            
+                dictConfig_matrix.update({str(x+1): listaux})
+                print(dictConfig_matrix)
+            print(f"\nFinishing the {z + 1} matrix!")
+            string_aux += str(dictConfig_matrix) + " || "
+            
+        main(string_aux)
