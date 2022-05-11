@@ -22,11 +22,11 @@
         - Possivel fazer com o NUMPY
     - Enviar as respostas para o client.
     - ArgParser inserido no projeto, para passar argumentos por linha de comandos via terminal.
+    - Criar threads para a comunicacao dos clients com o server UDP
     
 
 ## Não Realizado
 
     - Desenvolver uma comunicação do server UDP com outros servers TCP.
-    - Criar threads para a comunicacao dos clients com o server UDP
     - Criar subprocess para a comunicacao do server UDP com o server TCP
     - Entre outros objetivos ...

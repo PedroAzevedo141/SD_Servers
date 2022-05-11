@@ -1,5 +1,6 @@
 import argparse
 import socket
+import sys
 
 
 def define_and_get_arguments(args=sys.argv[1:]):
@@ -12,6 +13,8 @@ def define_and_get_arguments(args=sys.argv[1:]):
                         help="host's port Ex. 8080, 3001, 8553, etc")
     parser.add_argument("--hostname", type=str, default="127.0.0.1",
                         help="hostname or ip. Ex. 'localhost', '127.0.0.1', etc")
+    parser.add_argument("--bufferSize", type=int, default=1024,
+                        help="bufferSize message. Ex. '1024', '2048', etc")
 
     args = parser.parse_args(args=args)
 
@@ -33,9 +36,12 @@ def get_int():
         return(get_int())
 
 def main(msg):
+    
+    args = define_and_get_arguments()
+    
     bytesToSend = str.encode(msg)
-    serverAddressPort = ("127.0.0.1", 20001)
-    bufferSize = 1024
+    serverAddressPort = (args.hostname, args.port)
+    bufferSize = args.bufferSize
 
     # Create a UDP socket at client side
     UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
