@@ -1,8 +1,28 @@
+import argparse
+import sys
 import yaml
 import socket
 import numpy as np
 
 clients = []
+
+ARGS = None
+
+
+def define_and_get_arguments(args=sys.argv[1:]):
+    parser = argparse.ArgumentParser(
+        description="Run the server."
+    )
+    parser.add_argument("--n_max", type=int,
+                        default="10", help="Maximum value to serve requests at the same time. (INT)")
+    parser.add_argument("--port", type=int, default=20001,
+                        help="host's port Ex. 8080, 3001, 8553, etc")
+    parser.add_argument("--hostname", type=str, default="127.0.0.1",
+                        help="hostname or ip. Ex. 'localhost', '127.0.0.1', etc")
+
+    args = parser.parse_args(args=args)
+
+    return args
 
 def multMatrix_client(listMatrix):
 
@@ -27,8 +47,13 @@ def multMatrix_client(listMatrix):
 
 
 def main():
-    localIP = "127.0.0.1"
-    localPort = 20001
+    
+    args = define_and_get_arguments()
+
+    print(f"N = {args.n_max}")
+    
+    localIP = args.hostname
+    localPort = args.port
     bufferSize = 1024
 
     # Create a datagram socket

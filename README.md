@@ -21,6 +21,7 @@
     - Desenvolver a multiplicação das matrizes nos servidores
         - Possivel fazer com o NUMPY
     - Enviar as respostas para o client.
+    - ArgParser inserido no projeto, para passar argumentos por linha de comandos via terminal.
     
 
 ## Não Realizado
