@@ -56,23 +56,39 @@ def main(msg):
     
 if __name__ == "__main__":
     
-    num_matrix = get_int()
+    # num_matrix = get_int()
     
-    if num_matrix != None:
-        size_matrix = int(input("\n Enter the size of your square matrix: "))
+    # if num_matrix != None:
+    #     size_matrix = int(input("\n Enter the size of your square matrix: "))
 
-        string_aux = ""
-        for z in range(num_matrix):
-            dictConfig_matrix = dict()
-            print(f"\nCreating the {z + 1} matrix!")
-            for x in range(size_matrix):
-                listaux = list()
-                for y in range(size_matrix):
-                    listaux.append(int(input("\n Insert a number: ")))
+    #     string_aux = ""
+    #     for z in range(num_matrix):
+    #         dictConfig_matrix = dict()
+    #         print(f"\nCreating the {z + 1} matrix!")
+    #         for x in range(size_matrix):
+    #             listaux = list()
+    #             for y in range(size_matrix):
+    #                 listaux.append(int(input("\n Insert a number: ")))
             
-                dictConfig_matrix.update({str(x+1): listaux})
-                print(dictConfig_matrix)
-            print(f"\nFinishing the {z + 1} matrix!")
-            string_aux += str(dictConfig_matrix) + " || "
+    #             dictConfig_matrix.update({str(x+1): listaux})
+    #             print(dictConfig_matrix)
+    #         print(f"\nFinishing the {z + 1} matrix!")
+    #         string_aux += str(dictConfig_matrix) + " || "
+    
+    
+    # Gerando Automaticamente duas matrizes 10x10
+    string_aux = ""
+    for z in range(2):
+        dictConfig_matrix = dict()
+        print(f"\nCreating the {z + 1} matrix!")
+        for x in range(10):
+            listaux = list()
+            for y in range(10):
+                listaux.append(y + 1)
+        
+            dictConfig_matrix.update({str(x+1): listaux})
+            print(dictConfig_matrix)
+        print(f"\nFinishing the {z + 1} matrix!")
+        string_aux += str(dictConfig_matrix) + " || "
             
-        main(string_aux)
+    main(string_aux)

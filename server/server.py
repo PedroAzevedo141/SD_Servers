@@ -70,7 +70,7 @@ def messagesTreatment(message, address, server, clients, condition):
     msgFromServer = multMatrix_client(list_aux)
     bytesToSend = str.encode(msgFromServer)
     
-    sleep(15)
+    # sleep(15)
     clients.remove(address)
     
     condition.notify()
