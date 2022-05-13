@@ -23,6 +23,7 @@
     - Enviar as respostas para o client.
     - ArgParser inserido no projeto, para passar argumentos por linha de comandos via terminal.
     - Criar threads para a comunicacao dos clients com o server UDP
+    - Limitando o acesso ao servidor principal.
     
 
 ## Não Realizado
