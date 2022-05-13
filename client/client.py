@@ -21,7 +21,7 @@ def define_and_get_arguments(args=sys.argv[1:]):
     return args
 
 def get_int():
-    userdata = input("\n Enter the number of arrays, or 'q' to quit:")
+    userdata = input("\n Enter the number of arrays, or 'q' to quit: ")
     if userdata == 'q':
         return None
     try:

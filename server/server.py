@@ -1,11 +1,12 @@
 import argparse
+from multiprocessing import Process
 import sys
+from time import sleep
 import yaml
 import socket
 import numpy as np
 import threading
 
-clients = []
 
 ARGS = None
 
@@ -48,7 +49,10 @@ def multMatrix_client(listMatrix):
             
     return np.array2string(result_mult)
 
-def messagesTreatment(message, address, server):
+def messagesTreatment(message, address, server, clients, condition):
+    
+    condition.acquire()
+    
     clientMsg = "Message from Client:{}".format(message)
     clientIP = "Client IP Address:{}".format(address)
 
@@ -66,8 +70,47 @@ def messagesTreatment(message, address, server):
     msgFromServer = multMatrix_client(list_aux)
     bytesToSend = str.encode(msgFromServer)
     
+    sleep(15)
+    clients.remove(address)
+    
+    condition.notify()
+    condition.release()
+    
     server.sendto(bytesToSend, address)
 
+def listen_partner(partners, address):
+    server = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
+
+    try:
+        # Bind to address and ip
+        server.bind(address)
+        print("TCP server up and listening")
+    except NameError:
+        return print(f'\nNão foi possível iniciar o servidor! Error -> {NameError}\n')
+
+    while True:
+        server.listen(1)
+        print()
+        print(partners)
+
+        conn, addr = server.accept()
+        with conn:
+            print(f"Connected by {addr}")
+            data = conn.recv(1024)
+            if not data:
+                break
+            
+            data = int(data.decode())
+            partners.append((addr, data, conn))
+
+def send_message_to_partner(server, partners, bufferSize):
+    bytesAddressPair = server.recvfrom(bufferSize)
+    message = bytesAddressPair[0]
+    address = bytesAddressPair[1]
+
+    server.sendto(message, partners[0][0])
+    response = server.recvfrom(bufferSize)
+    server.sendto(response, address)
 
 def main():
     
@@ -86,18 +129,31 @@ def main():
         # Bind to address and ip
         server.bind((localIP, localPort))
         print("UDP server up and listening")
-    except:
-        return print('\nNão foi possível iniciar o servidor!\n')
+    except NameError:
+        return print(f'\nNão foi possível iniciar o servidor! Error -> {NameError}\n')
     
+    clients = []
+    partners = []
+
+    thread = threading.Thread(target=listen_partner, args=[partners, (localIP, localPort)])
+    thread.start()
 
     # Listen for incoming datagrams
     while(True):
+        
+        if len(clients) >= args.n_max:
+            proc = Process(target=send_message_to_partner, args=(server, partners, bufferSize))
+            proc.start()
+            continue
 
         bytesAddressPair = server.recvfrom(bufferSize)
         message = bytesAddressPair[0]
         address = bytesAddressPair[1]
         
-        thread = threading.Thread(target=messagesTreatment, args=[message, address, server])
+        clients.append(address)
+        
+        condition = threading.Condition()
+        thread = threading.Thread(target=messagesTreatment, args=[message, address, server, clients, condition])
         thread.start()
 
 if __name__ == "__main__":
