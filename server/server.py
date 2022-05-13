@@ -79,6 +79,7 @@ def messagesTreatment(message, address, server, clients, condition):
     server.sendto(bytesToSend, address)
 
 def listen_partner(partners, address):
+    
     server = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
 
     try:
@@ -89,26 +90,28 @@ def listen_partner(partners, address):
         return print(f'\nNão foi possível iniciar o servidor! Error -> {NameError}\n')
 
     while True:
-        server.listen(1)
+        server.listen()
         print()
         print(partners)
 
         conn, addr = server.accept()
-        with conn:
-            print(f"Connected by {addr}")
-            data = conn.recv(1024)
-            if not data:
-                break
-            
-            data = int(data.decode())
-            partners.append((addr, data, conn))
+        
+        print(f"Connected by {addr}")
+        data = conn.recv(1024)
+        print(data)
+        if not data:
+            break
+        
+        data = int(data.decode())
+        partners.append((addr, data, conn))
 
-def send_message_to_partner(server, partners, bufferSize):
-    bytesAddressPair = server.recvfrom(bufferSize)
+def send_message_to_partner(server, partners, bufferSize, bytesAddressPair):
     message = bytesAddressPair[0]
     address = bytesAddressPair[1]
-
-    server.sendto(message, partners[0][0])
+    
+    print(f"\npartners: {partners[0][2]}\n")
+    
+    partners[0][2].sendto(message, partners[0][0])
     response = server.recvfrom(bufferSize)
     server.sendto(response, address)
 
@@ -141,12 +144,13 @@ def main():
     # Listen for incoming datagrams
     while(True):
         
+        bytesAddressPair = server.recvfrom(bufferSize)
+        
         if len(clients) >= args.n_max:
-            proc = Process(target=send_message_to_partner, args=(server, partners, bufferSize))
+            proc = Process(target=send_message_to_partner, args=(server, partners, bufferSize, bytesAddressPair))
             proc.start()
             continue
 
-        bytesAddressPair = server.recvfrom(bufferSize)
         message = bytesAddressPair[0]
         address = bytesAddressPair[1]
         

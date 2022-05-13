@@ -25,34 +25,23 @@ def multMatrix_client(listMatrix):
             
     return np.array2string(result_mult)
 
-def messagesTreatment(message, address, server, clients, condition):
+def messagesTreatment(message, client):
     
-    condition.acquire()
-    
-    clientMsg = "Message from Client:{}".format(message)
-    clientIP = "Client IP Address:{}".format(address)
-
-    print(clientMsg)
-    print(clientIP)
-    
+    print(message)
     message = ((message.decode()).split(" || "))[:-1]
 
-    list_aux = list()
-    for x in message:        
-        dictConfig_matrix = dict()
-        dictConfig_matrix.update(yaml.safe_load(x))
-        list_aux.append(dictConfig_matrix)
+    # list_aux = list()
+    # for x in message:        
+    #     dictConfig_matrix = dict()
+    #     dictConfig_matrix.update(yaml.safe_load(x))
+    #     list_aux.append(dictConfig_matrix)
     
-    msgFromServer = multMatrix_client(list_aux)
-    bytesToSend = str.encode(msgFromServer)
+    # msgFromServer = multMatrix_client(list_aux)
+    # bytesToSend = str.encode(msgFromServer)
     
-    sleep(15)
-    clients.remove(address)
+    # sleep(15)
     
-    condition.notify()
-    condition.release()
-    
-    server.sendto(bytesToSend, address)
+    # client.sendto(bytesToSend)
 
 def server_partner():
     
@@ -72,22 +61,20 @@ def server_partner():
     except:
         return print('\nNão foi possível iniciar o servidor!\n')
     
-    clients = []
 
     # Listen for incoming datagrams
 
     client.send((str(n_max)).encode("utf-8"))
     
     while True:
-        client.recv(1024)
-        # message = bytesAddressPair[0]
-        # address = bytesAddressPair[1]
+        message = client.recv(1024)
         
-        # clients.append(address)
+        if message.decode() == "":
+            continue
         
-        # condition = threading.Condition()
-        # thread = threading.Thread(target=messagesTreatment, args=[message, address, server, clients, condition])
-        # thread.start()
+        condition = threading.Condition()
+        thread = threading.Thread(target=messagesTreatment, args=[message, client])
+        thread.start()
 
         
 if __name__ == "__main__":

@@ -24,10 +24,11 @@
     - ArgParser inserido no projeto, para passar argumentos por linha de comandos via terminal.
     - Criar threads para a comunicacao dos clients com o server UDP
     - Limitando o acesso ao servidor principal.
+    - Desenvolver uma comunicação do server UDP com outros servers TCP.
+    - Criar subprocess para a comunicacao do server UDP com o server TCP
     
 
 ## Não Realizado
 
-    - Desenvolver uma comunicação do server UDP com outros servers TCP.
-    - Criar subprocess para a comunicacao do server UDP com o server TCP
-    - Entre outros objetivos ...
+    - Realizar as multiplicacoes nos servidores parceiros.
+    - Realizar a conexcao de N servers parceiros. (Esta setado apenas no primeiro server conectado).
