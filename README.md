@@ -4,8 +4,13 @@
 
     Server:
         - cd server
-        - python3 server.py (linux)
-        - py server.py (Windows)
+        - python3 server.py --n_max 10 (linux)
+        - py server.py --n_max 10 (Windows)
+
+    Server Partner:
+        - cd server
+        - python3 server_partner.py --n_max 10 (linux)
+        - py server_partner.py --n_max 10 (Windows)
 
     Client:
         - cd client
@@ -26,9 +31,15 @@
     - Limitando o acesso ao servidor principal.
     - Desenvolver uma comunicação do server UDP com outros servers TCP.
     - Criar subprocess para a comunicacao do server UDP com o server TCP
+    - Realizar as multiplicacoes nos servidores parceiros.
     
 
 ## Não Realizado
 
-    - Realizar as multiplicacoes nos servidores parceiros.
     - Realizar a conexcao de N servers parceiros. (Esta setado apenas no primeiro server conectado).
+
+## Desenvolvido
+
+    - Pedro Azevedo Abrantes de Oliveira
+    - Jederilson S. Luz
+    - Elievelto E Silva

@@ -133,7 +133,7 @@ def main():
         server.bind((localIP, localPort))
         print("UDP server up and listening")
     except NameError:
-        return print(f'\nNão foi possível iniciar o servidor! Error -> {NameError}\n')
+        return print(f'\nNão foi possível iniciar o servidor UDP! Error -> {NameError}\n')
     
     clients = []
     partners = []

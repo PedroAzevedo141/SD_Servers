@@ -1,8 +1,30 @@
-from time import sleep
+import sys
 import yaml
 import socket
-import numpy as np
+import argparse
 import threading
+import numpy as np
+from time import sleep
+
+ARGS = None
+
+
+def define_and_get_arguments(args=sys.argv[1:]):
+    parser = argparse.ArgumentParser(
+        description="Run the server."
+    )
+    parser.add_argument("--n_max", type=int,
+                        default="10", help="Maximum value to serve requests at the same time. (INT)")
+    parser.add_argument("--port", type=int, default=20001,
+                        help="host's port Ex. 8080, 3001, 8553, etc")
+    parser.add_argument("--hostname", type=str, default="127.0.0.1",
+                        help="hostname or ip. Ex. 'localhost', '127.0.0.1', etc")
+    parser.add_argument("--bufferSize", type=int, default=1024,
+                        help="bufferSize message. Ex. '1024', '2048', etc")
+
+    args = parser.parse_args(args=args)
+
+    return args
 
 def multMatrix_client(listMatrix):
 
@@ -30,26 +52,28 @@ def messagesTreatment(message, client):
     print(message)
     message = ((message.decode()).split(" || "))[:-1]
 
-    # list_aux = list()
-    # for x in message:        
-    #     dictConfig_matrix = dict()
-    #     dictConfig_matrix.update(yaml.safe_load(x))
-    #     list_aux.append(dictConfig_matrix)
+    list_aux = list()
+    for x in message:        
+        dictConfig_matrix = dict()
+        dictConfig_matrix.update(yaml.safe_load(x))
+        list_aux.append(dictConfig_matrix)
     
-    # msgFromServer = multMatrix_client(list_aux)
-    # bytesToSend = str.encode(msgFromServer)
+    msgFromServer = multMatrix_client(list_aux)
+    bytesToSend = str.encode(msgFromServer)
     
-    # sleep(15)
+    sleep(15)
     
-    # client.sendto(bytesToSend)
+    client.sendto(bytesToSend)
 
 def server_partner():
     
-    localIP = "127.0.0.1"
-    localPort = 20001
-    bufferSize = 1024
+    args = define_and_get_arguments()
     
-    n_max = 2
+    localIP = args.hostname
+    localPort = args.port
+    bufferSize = args.bufferSize
+    
+    n_max = args.n_max
 
     # Create a datagram socket
     client = socket.socket(family=socket.AF_INET, type=socket.SOCK_STREAM)
@@ -58,8 +82,8 @@ def server_partner():
         # Bind to address and ip
         client.connect((localIP, localPort))
         print("TCP server up and listening")
-    except:
-        return print('\nNão foi possível iniciar o servidor!\n')
+    except NameError:
+        return print(f'\nNão foi possível iniciar o servidor TCP! Error -> {NameError}\n')
     
 
     # Listen for incoming datagrams
@@ -67,12 +91,11 @@ def server_partner():
     client.send((str(n_max)).encode("utf-8"))
     
     while True:
-        message = client.recv(1024)
+        message = client.recv(bufferSize)
         
         if message.decode() == "":
             continue
         
-        condition = threading.Condition()
         thread = threading.Thread(target=messagesTreatment, args=[message, client])
         thread.start()
 
